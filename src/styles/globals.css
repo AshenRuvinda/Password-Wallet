@@ -14,6 +14,8 @@
     --card-dark: 31 41 55; /* Gray-800 */
     --text: 17 24 39; /* Gray-900 */
     --text-dark: 243 244 246; /* Gray-100 */
+    --error: 239 68 68; /* Red-500 */
+    --success: 34 197 94; /* Green-500 */
   }
 
   html {
@@ -43,6 +45,10 @@
   input, button, select, textarea {
     @apply outline-none transition-all duration-200;
   }
+
+  input:focus, textarea:focus {
+    @apply ring-2 ring-primary ring-offset-2 dark:ring-offset-background-dark;
+  }
 }
 
 @layer components {
@@ -51,41 +57,49 @@
   }
 
   .card {
-    @apply bg-card dark:bg-card-dark rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6;
+    @apply bg-card dark:bg-card-dark rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 dark:border-gray-700;
   }
 
   .btn-primary {
-    @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark font-semibold transition-all duration-200;
+    @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2;
   }
 
-  .btn-secondary {
-    @apply px-6 py-3 bg-gray-200 dark:bg-gray-700 text-text dark:text-text-dark rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-background-dark font-semibold transition-all duration-200;
+  .btn-icon {
+    @apply p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-text dark:text-text-dark transition-all duration-200;
   }
 
   .input-field {
     @apply w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-text dark:text-text-dark placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200;
   }
 
+  .input-group {
+    @apply relative;
+  }
+
   .error-message {
-    @apply text-red-500 bg-red-100 dark:bg-red-900/30 p-3 rounded-lg text-center;
+    @apply text-error bg-red-100 dark:bg-red-900/30 p-3 rounded-lg text-sm flex items-center gap-2;
   }
 
   .success-message {
-    @apply text-accent bg-accent/10 dark:bg-accent/20 p-3 rounded-lg text-center;
+    @apply text-success bg-green-100 dark:bg-green-900/30 p-3 rounded-lg text-sm flex items-center gap-2;
   }
 
   .nav-link {
-    @apply text-text dark:text-text-dark hover:text-primary dark:hover:text-primary font-medium transition-colors duration-200;
+    @apply px-4 py-2 rounded-lg text-sm font-medium text-text dark:text-text-dark hover:bg-primary hover:text-white dark:hover:bg-primary-dark dark:hover:text-white transition-all duration-200;
   }
 
   .nav-link-active {
-    @apply border-b-2 border-primary dark:border-primary text-primary dark:text-primary;
+    @apply bg-primary text-white dark:bg-primary-dark dark:text-white;
+  }
+
+  .loader {
+    @apply animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full;
   }
 }
 
 @layer utilities {
   .gradient-bg {
-    @apply bg-gradient-to-br from-background to-gray-300 dark:from-background-dark dark:to-gray-800;
+    @apply bg-gradient-to-br from-background via-gray-200 to-gray-300 dark:from-background-dark dark:via-gray-800 dark:to-gray-900;
   }
 
   .perspective-1000 {
@@ -103,7 +117,20 @@
     }
   }
 
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
   .animate-fadeInUp {
     animation: fadeInUp 0.5s ease-out forwards;
+  }
+
+  .animate-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
   }
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '../../../../lib/dbConnect';
 import User from '../../../../models/User';
-import { verifyToken, hashPassword } from '../../../../lib/auth';
+import { verifyToken, hashPin, hashSecurityAnswer } from '../../../../lib/auth';
 
 export async function GET(request: Request) {
   await dbConnect();
@@ -40,9 +40,9 @@ export async function PUT(request: Request) {
     }
 
     if (fullName) user.fullName = fullName;
-    if (masterPin) user.masterPin = masterPin;
+    if (masterPin) user.masterPin = hashPin(masterPin);
     if (securityQuestion) user.securityQuestion = securityQuestion;
-    if (securityAnswer) user.securityAnswer = securityAnswer;
+    if (securityAnswer) user.securityAnswer = hashSecurityAnswer(securityAnswer);
 
     await user.save();
     return NextResponse.json({ message: 'Profile updated successfully' });

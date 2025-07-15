@@ -1,12 +1,12 @@
 export function validateAuthForm(formData: {
     email: string;
     password: string;
-    fullName?: string;
     masterPin?: string;
+    fullName?: string;
     securityQuestion?: string;
     securityAnswer?: string;
   }, type: 'login' | 'register'): string | null {
-    const { email, password, fullName, masterPin, securityQuestion, securityAnswer } = formData;
+    const { email, password, masterPin, fullName, securityQuestion, securityAnswer } = formData;
   
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return 'Please enter a valid email address';
@@ -16,12 +16,13 @@ export function validateAuthForm(formData: {
       return 'Password must be at least 6 characters long';
     }
   
+    if (!masterPin || !/^\d{4}$/.test(masterPin)) {
+      return 'Master PIN must be a 4-digit number';
+    }
+  
     if (type === 'register') {
       if (!fullName || fullName.length < 2) {
         return 'Full name must be at least 2 characters long';
-      }
-      if (!masterPin || !/^\d{4}$/.test(masterPin)) {
-        return 'Master PIN must be a 4-digit number';
       }
       if (!securityQuestion || securityQuestion.length < 5) {
         return 'Security question must be at least 5 characters long';

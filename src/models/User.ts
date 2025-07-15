@@ -13,9 +13,9 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   fullName: { type: String, required: true },
-  masterPin: { type: String, required: true },
+  masterPin: { type: String, required: true }, // Stored as hashed
   securityQuestion: { type: String, required: true },
-  securityAnswer: { type: String, required: true },
+  securityAnswer: { type: String, required: true }, // Stored as hashed
 });
 
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

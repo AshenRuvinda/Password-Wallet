@@ -5,6 +5,14 @@ export function hashPassword(password: string): string {
   return CryptoJS.SHA256(password).toString();
 }
 
+export function hashPin(pin: string): string {
+  return CryptoJS.SHA256(pin).toString();
+}
+
+export function hashSecurityAnswer(answer: string): string {
+  return CryptoJS.SHA256(answer).toString();
+}
+
 export function verifyToken(token: string) {
   return jwt.verify(token, process.env.JWT_SECRET || '');
 }
