@@ -59,14 +59,14 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen gradient-bg py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="container card animate-fadeInUp max-w-md"
+        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8"
       >
-        <h2 className="text-3xl mb-6 text-center font-extrabold text-text dark:text-text-dark">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">
           Update Profile
         </h2>
         {error && (
@@ -74,7 +74,7 @@ export default function SettingsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="error-message mb-6"
+            className="bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-300 rounded-lg p-4 mb-6 text-sm"
           >
             {error}
           </motion.p>
@@ -84,61 +84,64 @@ export default function SettingsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="success-message mb-6"
+            className="bg-green-50 dark:bg-green-900/50 text-green-600 dark:text-green-300 rounded-lg p-4 mb-6 text-sm"
           >
             {success}
           </motion.p>
         )}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Full Name
             </label>
             <input
               type="text"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              className="input-field"
+              className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
               placeholder="Enter your full name"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Master PIN
             </label>
             <input
               type="password"
               value={formData.masterPin}
               onChange={(e) => setFormData({ ...formData, masterPin: e.target.value })}
-              className="input-field"
+              className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
               placeholder="Enter new 4-digit PIN (optional)"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Security Question
             </label>
             <input
               type="text"
               value={formData.securityQuestion}
               onChange={(e) => setFormData({ ...formData, securityQuestion: e.target.value })}
-              className="input-field"
+              className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
               placeholder="e.g., What is your pet's name?"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Security Answer
             </label>
             <input
               type="text"
               value={formData.securityAnswer}
               onChange={(e) => setFormData({ ...formData, securityAnswer: e.target.value })}
-              className="input-field"
+              className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
               placeholder="Enter your answer (optional)"
             />
           </div>
-          <button type="submit" className="btn-primary w-full">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+          >
             Save Changes
           </button>
         </form>

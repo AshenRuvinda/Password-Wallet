@@ -62,7 +62,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent tracking-tight">
-          Wallet
+        Lock-Box
         </h1>
         <div className="hidden md:flex items-center space-x-8">
           {links.map((link) => (
