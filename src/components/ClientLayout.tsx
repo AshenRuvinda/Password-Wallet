@@ -10,7 +10,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <>
-      {!isAuthPage && <Sidebar />}
+      
       <div className="flex-1 flex flex-col">
         {!isAuthPage && <Navbar />}
         <main className="flex-1">{children}</main>
