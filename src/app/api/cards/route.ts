@@ -1,26 +1,30 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '../../../lib/dbConnect';
-import Card from '../../../models/Card';
+import Card, { ICard } from '../../../models/Card';
 import { verifyToken } from '../../../lib/auth';
-import { decryptData } from '../../../lib/crypto';
+import mongoose from 'mongoose';
+
+interface CardWithId extends ICard {
+  _id: string;
+}
 
 export async function GET(request: Request) {
   await dbConnect();
-  const token = request.headers.get('Authorization')?.split(' ')[1];
+  const token = request.headers.get('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const decoded = verifyToken(token) as { userId: string };
-    const cards = await Card.find({ userId: decoded.userId });
-    const decryptedCards = cards.map(c => ({
-      ...c.toObject(),
-      cardNumber: decryptData(c.cardNumber, process.env.JWT_SECRET || ''),
-      cvv: decryptData(c.cvv, process.env.JWT_SECRET || ''),
+    const decoded = verifyToken(token);
+    const cards = await Card.find({ userId: (decoded as any).userId }).lean() as (ICard & { _id: mongoose.Types.ObjectId })[];
+    // Convert _id to string
+    const cardsWithStringId: CardWithId[] = cards.map(card => ({
+      ...card,
+      _id: card._id.toString(),
     }));
-    return NextResponse.json(decryptedCards);
+    return NextResponse.json(cardsWithStringId, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch cards' }, { status: 500 });
   }

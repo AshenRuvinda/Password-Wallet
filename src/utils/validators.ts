@@ -58,3 +58,35 @@ export function validateAuthForm(formData: {
   
     return null;
   }
+  
+  export function validateCardForm(formData: {
+    cardholderName: string;
+    cardNumber: string;
+    expiryDate: string;
+    cvv: string;
+    cardType: string;
+  }): string | null {
+    const { cardholderName, cardNumber, expiryDate, cvv, cardType } = formData;
+  
+    if (!cardholderName || cardholderName.length < 2) {
+      return 'Cardholder name must be at least 2 characters long';
+    }
+  
+    if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
+      return 'Card number must be a 16-digit number';
+    }
+  
+    if (!expiryDate || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+      return 'Expiry date must be in MM/YY format';
+    }
+  
+    if (!cvv || !/^\d{3,4}$/.test(cvv)) {
+      return 'CVV must be a 3 or 4-digit number';
+    }
+  
+    if (!cardType || !['Visa', 'MasterCard', 'Amex', 'Discover'].includes(cardType)) {
+      return 'Card type must be Visa, MasterCard, Amex, or Discover';
+    }
+  
+    return null;
+  }

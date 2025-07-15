@@ -4,18 +4,18 @@
 
 @layer base {
   :root {
-    --primary: 59 130 246; /* Blue-500 */
-    --primary-dark: 37 99 235; /* Blue-600 */
-    --accent: 34 197 94; /* Green-500 */
-    --accent-dark: 22 163 74; /* Green-600 */
-    --background: 243 244 246; /* Gray-100 */
-    --background-dark: 17 24 39; /* Gray-900 */
-    --card: 255 255 255; /* White */
-    --card-dark: 31 41 55; /* Gray-800 */
-    --text: 17 24 39; /* Gray-900 */
-    --text-dark: 243 244 246; /* Gray-100 */
-    --error: 239 68 68; /* Red-500 */
-    --success: 34 197 94; /* Green-500 */
+    --primary: 59 130 246;
+    --primary-dark: 37 99 235;
+    --accent: 34 197 94;
+    --accent-dark: 22 163 74;
+    --background: 243 244 246;
+    --background-dark: 17 24 39;
+    --card: 255 255 255;
+    --card-dark: 31 41 55;
+    --text: 17 24 39;
+    --text-dark: 243 244 246;
+    --error: 239 68 68;
+    --success: 34 197 94;
   }
 
   html {
@@ -23,7 +23,7 @@
   }
 
   body {
-    @apply font-sans text-base leading-relaxed text-text dark:text-text-dark bg-background dark:bg-background-dark transition-colors duration-300;
+    @apply font-sans text-base leading-relaxed text-text dark:text-text-dark bg-background dark:bg-background-dark transition-colors duration-300 antialiased;
   }
 
   h1, h2, h3 {
@@ -31,15 +31,15 @@
   }
 
   h1 {
-    @apply text-4xl md:text-5xl;
+    @apply text-5xl md:text-6xl;
   }
 
   h2 {
-    @apply text-3xl md:text-4xl;
+    @apply text-4xl md:text-5xl;
   }
 
   h3 {
-    @apply text-xl md:text-2xl;
+    @apply text-2xl md:text-3xl;
   }
 
   input, button, select, textarea {
@@ -57,19 +57,32 @@
   }
 
   .card {
-    @apply bg-card dark:bg-card-dark rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 dark:border-gray-700;
+    @apply bg-card dark:bg-card-dark rounded-3xl shadow-lg dark:shadow-xl hover:shadow-2xl backdrop-blur-md bg-opacity-60 dark:bg-opacity-40 transition-all duration-300 border border-gray-200 dark:border-gray-700;
+  }
+
+  .glass {
+    @apply bg-white/30 dark:bg-white/10 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300;
   }
 
   .btn-primary {
-    @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2;
+    @apply px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark focus:ring-4 focus:ring-primary/50 dark:focus:ring-offset-background-dark font-semibold transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed shadow-md hover:shadow-xl transform hover:scale-105 active:scale-95;
+  }
+
+  .btn-glow {
+    @apply relative text-white bg-gradient-to-r from-primary via-blue-400 to-accent shadow-lg rounded-xl px-6 py-3 transition-transform duration-300 hover:scale-105 active:scale-95;
+  }
+
+  .btn-glow::after {
+    content: '';
+    @apply absolute inset-0 rounded-xl bg-white/20 blur-sm opacity-0 hover:opacity-100 transition-opacity duration-500;
   }
 
   .btn-icon {
-    @apply p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-text dark:text-text-dark transition-all duration-200;
+    @apply p-3 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-text dark:text-text-dark shadow-sm transition-all duration-200;
   }
 
   .input-field {
-    @apply w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-text dark:text-text-dark placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200;
+    @apply w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white/60 dark:bg-gray-800 text-text dark:text-text-dark placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 shadow-inner;
   }
 
   .input-group {
@@ -77,23 +90,31 @@
   }
 
   .error-message {
-    @apply text-error bg-red-100 dark:bg-red-900/30 p-3 rounded-lg text-sm flex items-center gap-2;
+    @apply text-error bg-red-100 dark:bg-red-900/30 p-4 rounded-lg text-sm flex items-center gap-2 shadow-md;
   }
 
   .success-message {
-    @apply text-success bg-green-100 dark:bg-green-900/30 p-3 rounded-lg text-sm flex items-center gap-2;
+    @apply text-success bg-green-100 dark:bg-green-900/30 p-4 rounded-lg text-sm flex items-center gap-2 shadow-md;
   }
 
   .nav-link {
-    @apply px-4 py-2 rounded-lg text-sm font-medium text-text dark:text-text-dark hover:bg-primary hover:text-white dark:hover:bg-primary-dark dark:hover:text-white transition-all duration-200;
+    @apply px-5 py-2 rounded-xl text-sm font-medium text-text dark:text-text-dark hover:bg-primary/90 hover:text-white dark:hover:bg-primary-dark dark:hover:text-white transition-all duration-200;
   }
 
   .nav-link-active {
-    @apply bg-primary text-white dark:bg-primary-dark dark:text-white;
+    @apply bg-primary text-white dark:bg-primary-dark dark:text-white font-semibold shadow-md;
   }
 
   .loader {
-    @apply animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full;
+    @apply animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full;
+  }
+
+  .card-hover {
+    @apply transition-transform duration-300 hover:scale-[1.03] hover:shadow-2xl;
+  }
+
+  .glass-card {
+    @apply bg-white/20 dark:bg-gray-800/30 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-lg transition-all duration-300;
   }
 }
 
@@ -127,10 +148,28 @@
   }
 
   .animate-fadeInUp {
-    animation: fadeInUp 0.5s ease-out forwards;
+    animation: fadeInUp 0.6s ease-out forwards;
   }
 
   .animate-pulse {
     animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  .glass-bg {
+    @apply bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl;
+  }
+
+  .shadow-soft {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .blur-bg {
+    backdrop-filter: blur(10px);
+  }
+
+  .neumorphic {
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+    border-radius: 20px;
+    background: #e0e5ec;
   }
 }

@@ -13,8 +13,8 @@ export function hashSecurityAnswer(answer: string): string {
   return CryptoJS.SHA256(answer).toString();
 }
 
-export function verifyToken(token: string) {
-  return jwt.verify(token, process.env.JWT_SECRET || '');
+export function deriveEncryptionKey(hashedPin: string): string {
+  return hashedPin.substring(0, 32);
 }
 
 export function encryptData(data: string, key: string): string {
@@ -24,4 +24,8 @@ export function encryptData(data: string, key: string): string {
 export function decryptData(data: string, key: string): string {
   const bytes = CryptoJS.AES.decrypt(data, key);
   return bytes.toString(CryptoJS.enc.Utf8);
+}
+
+export function verifyToken(token: string) {
+  return jwt.verify(token, process.env.JWT_SECRET || '');
 }
