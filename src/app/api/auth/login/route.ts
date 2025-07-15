@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '../../../../lib/dbConnect';
 import User from '../../../../models/User';
-import { verifyPassword, generateToken } from '../../../../lib/auth';
+import { hashPassword } from '../../../../lib/auth';
+import jwt from 'jsonwebtoken';
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -13,12 +14,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const isValid = await verifyPassword(password, user.password);
-    if (!isValid) {
+    const hashedPassword = hashPassword(password);
+    if (user.password !== hashedPassword) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const token = generateToken(user._id.toString());
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || '', { expiresIn: '1h' });
     return NextResponse.json({ token });
   } catch (error) {
     return NextResponse.json({ error: 'Login failed' }, { status: 500 });

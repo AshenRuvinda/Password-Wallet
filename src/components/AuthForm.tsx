@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { validateAuthForm } from '../utils/validators';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface Props {
   type: 'login' | 'register';
@@ -20,6 +22,7 @@ export default function AuthForm({ type }: Props) {
   });
   const [error, setError] = useState('');
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,82 +41,140 @@ export default function AuthForm({ type }: Props) {
         localStorage.setItem('token', res.data.token);
         router.push('/dashboard');
       } else {
-        router.push('/login');
+        setError('Registration successful! Please log in.');
+        setTimeout(() => router.push('/login'), 2000);
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'An error occurred. Please try again.');
     }
   };
 
   return (
-    <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">{type === 'login' ? 'Login' : 'Register'}</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {type === 'register' && (
+    <div className="min-h-screen gradient-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="container card max-w-md w-full"
+      >
+        <h2 className="text-3xl mb-6 text-center font-extrabold text-text dark:text-text-dark">
+          {type === 'login' ? 'Login' : 'Register'}
+        </h2>
+        <div className="flex justify-center space-x-4 mb-6">
+          <Link
+            href="/login"
+            className={`nav-link px-4 py-2 rounded-lg text-sm font-medium ${
+              pathname === '/login' ? 'nav-link-active' : ''
+            }`}
+          >
+            Login
+          </Link>
+          <Link
+            href="/register"
+            className={`nav-link px-4 py-2 rounded-lg text-sm font-medium ${
+              pathname === '/register' ? 'nav-link-active' : ''
+            }`}
+          >
+            Register
+          </Link>
+        </div>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="error-message mb-6"
+          >
+            {error}
+          </motion.p>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {type === 'register' && (
+            <div>
+              <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={formData.fullName}
+                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                className="input-field"
+                placeholder="Enter your full name"
+              />
+            </div>
+          )}
           <div>
-            <label className="block text-sm">Full Name</label>
+            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+              Email
+            </label>
             <input
-              type="text"
-              value={formData.fullName}
-              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="input-field"
+              placeholder="Enter your email"
             />
           </div>
-        )}
-        <div>
-          <label className="block text-sm">Email</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-          />
-        </div>
-        <div>
-          <label className="block text-sm">Password</label>
-          <input
-            type="password"
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-          />
-        </div>
-        {type === 'register' && (
-          <>
-            <div>
-              <label className="block text-sm">Master PIN</label>
-              <input
-                type="password"
-                value={formData.masterPin}
-                onChange={(e) => setFormData({ ...formData, masterPin: e.target.value })}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-            <div>
-              <label className="block text-sm">Security Question</label>
-              <input
-                type="text"
-                value={formData.securityQuestion}
-                onChange={(e) => setFormData({ ...formData, securityQuestion: e.target.value })}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-            <div>
-              <label className="block text-sm">Security Answer</label>
-              <input
-                type="text"
-                value={formData.securityAnswer}
-                onChange={(e) => setFormData({ ...formData, securityAnswer: e.target.value })}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-          </>
-        )}
-        <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          {type === 'login' ? 'Login' : 'Register'}
-        </button>
-      </form>
+          <div>
+            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="input-field"
+              placeholder="Enter your password"
+            />
+          </div>
+          {type === 'register' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+                  Master PIN
+                </label>
+                <input
+                  type="password"
+                  value={formData.masterPin}
+                  onChange={(e) => setFormData({ ...formData, masterPin: e.target.value })}
+                  className="input-field"
+                  placeholder="Enter 4-digit PIN"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+                  Security Question
+                </label>
+                <input
+                  type="text"
+                  value={formData.securityQuestion}
+                  onChange={(e) => setFormData({ ...formData, securityQuestion: e.target.value })}
+                  className="input-field"
+                  placeholder="e.g., What is your pet's name?"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+                  Security Answer
+                </label>
+                <input
+                  type="text"
+                  value={formData.securityAnswer}
+                  onChange={(e) => setFormData({ ...formData, securityAnswer: e.target.value })}
+                  className="input-field"
+                  placeholder="Enter your answer"
+                />
+              </div>
+            </>
+          )}
+          <button
+            type="submit"
+            className="btn-primary w-full"
+          >
+            {type === 'login' ? 'Login' : 'Register'}
+          </button>
+        </form>
+      </motion.div>
     </div>
   );
 }

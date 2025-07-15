@@ -1,9 +1,10 @@
 import AuthForm from '../../components/AuthForm';
 
+export const metadata = {
+  title: 'Login - Password & Credit Card Wallet',
+  description: 'Log in to securely manage your passwords and credit cards',
+};
+
 export default function LoginPage() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <AuthForm type="login" />
-    </div>
-  );
+  return <AuthForm type="login" />;
 }

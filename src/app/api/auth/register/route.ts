@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import dbConnect from '../../../../lib/dbConnect';
 import User from '../../../../models/User';
 import { hashPassword } from '../../../../lib/auth';
-import { encryptData } from '../../../../lib/crypto';
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -14,20 +13,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User already exists' }, { status: 400 });
     }
 
-    const hashedPassword = await hashPassword(password);
-    const encryptedMasterPin = encryptData(masterPin, process.env.JWT_SECRET || '');
-    const encryptedSecurityAnswer = encryptData(securityAnswer, process.env.JWT_SECRET || '');
-
-    const user = new User({
+    const hashedPassword = hashPassword(password);
+    await User.create({
       email,
       password: hashedPassword,
       fullName,
-      masterPin: encryptedMasterPin,
+      masterPin,
       securityQuestion,
-      securityAnswer: encryptedSecurityAnswer,
+      securityAnswer,
     });
 
-    await user.save();
     return NextResponse.json({ message: 'User registered successfully' }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 });

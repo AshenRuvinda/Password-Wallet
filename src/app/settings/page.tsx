@@ -1,9 +1,10 @@
- "use client";
+"use client";
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { validateSettingsForm } from '../../utils/validators';
+import { motion } from 'framer-motion';
 
 export default function SettingsPage() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,6 @@ export default function SettingsPage() {
   const [success, setSuccess] = useState('');
   const router = useRouter();
 
-  // Fetch current user data on mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -25,9 +25,9 @@ export default function SettingsPage() {
         });
         setFormData({
           fullName: res.data.fullName || '',
-          masterPin: '', // Don't prefill sensitive data
+          masterPin: '',
           securityQuestion: res.data.securityQuestion || '',
-          securityAnswer: '', // Don't prefill sensitive data
+          securityAnswer: '',
         });
       } catch (err) {
         setError('Failed to load user data');
@@ -48,70 +48,101 @@ export default function SettingsPage() {
     }
 
     try {
-      await axios.put(
-        '/api/auth/user',
-        formData,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        }
-      );
+      await axios.put('/api/auth/user', formData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
       setSuccess('Profile updated successfully');
-      setTimeout(() => router.push('/dashboard'), 2000); // Redirect to dashboard after success
-    } catch (err) {
-      setError('Failed to update profile');
+      setTimeout(() => router.push('/dashboard'), 2000);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to update profile');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded shadow">
-        <h2 className="text-2xl font-bold mb-4">Settings</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        {success && <p className="text-green-500 mb-4">{success}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen gradient-bg py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="container card animate-fadeInUp max-w-md"
+      >
+        <h2 className="text-3xl mb-6 text-center font-extrabold text-text dark:text-text-dark">
+          Update Profile
+        </h2>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="error-message mb-6"
+          >
+            {error}
+          </motion.p>
+        )}
+        {success && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="success-message mb-6"
+          >
+            {success}
+          </motion.p>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm">Full Name</label>
+            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+              Full Name
+            </label>
             <input
               type="text"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+              className="input-field"
+              placeholder="Enter your full name"
             />
           </div>
           <div>
-            <label className="block text-sm">Master PIN</label>
+            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+              Master PIN
+            </label>
             <input
               type="password"
               value={formData.masterPin}
               onChange={(e) => setFormData({ ...formData, masterPin: e.target.value })}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="Enter new PIN (leave blank to keep current)"
+              className="input-field"
+              placeholder="Enter new 4-digit PIN (optional)"
             />
           </div>
           <div>
-            <label className="block text-sm">Security Question</label>
+            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+              Security Question
+            </label>
             <input
               type="text"
               value={formData.securityQuestion}
               onChange={(e) => setFormData({ ...formData, securityQuestion: e.target.value })}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+              className="input-field"
+              placeholder="e.g., What is your pet's name?"
             />
           </div>
           <div>
-            <label className="block text-sm">Security Answer</label>
+            <label className="block text-sm font-medium text-text dark:text-text-dark mb-1">
+              Security Answer
+            </label>
             <input
               type="text"
               value={formData.securityAnswer}
               onChange={(e) => setFormData({ ...formData, securityAnswer: e.target.value })}
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="Enter new answer (leave blank to keep current)"
+              className="input-field"
+              placeholder="Enter your answer (optional)"
             />
           </div>
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          <button type="submit" className="btn-primary w-full">
             Save Changes
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
